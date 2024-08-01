@@ -12,8 +12,8 @@ class RequestLogin extends StatefulWidget {
 
 class _RequestLoginState extends State<RequestLogin>
     with SingleTickerProviderStateMixin {
-  Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
-  AnimationController animationController;
+  late Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
+  late AnimationController animationController;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _RequestLoginState extends State<RequestLogin>
         curve: Interval(0.5, 1.0, curve: Curves.easeInOut)));
   }
 
-  String email, phno, _class, name, rollno;
+  String email = '', phno = '', _class = '', name = '', rollno = '';
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,10 @@ class _RequestLoginState extends State<RequestLogin>
     animationController.forward();
     return AnimatedBuilder(
       animation: animationController,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
+        // Updated to accept nullable `Widget?` for child
+        final double width = MediaQuery.of(context).size.width;
+
         return Scaffold(
           body: ListView(
             children: <Widget>[
@@ -53,7 +56,9 @@ class _RequestLoginState extends State<RequestLogin>
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Transform(
                   transform: Matrix4.translationValues(
-                      animation.value * width, 0.0, 0.0),
+                      animationController.value * width,
+                      0.0,
+                      0.0), // Fixed usage of animationController
                   child: Center(
                     child: Stack(
                       children: <Widget>[
@@ -111,18 +116,19 @@ class _RequestLoginState extends State<RequestLogin>
                               children: [
                                 TextFormField(
                                   validator: (value) {
-                                    RegExp nameRegExp = RegExp('[a-zA-Z]');
-                                    RegExp numberRegExp = RegExp(r'\d');
-                                    if (value.isEmpty) {
-                                      return 'You Must enter your Name!';
-                                    } else if (nameRegExp.hasMatch(value)) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'You must enter your Name!';
+                                    }
+                                    RegExp nameRegExp =
+                                        RegExp(r'^[a-zA-Z\s]+$');
+                                    if (nameRegExp.hasMatch(value)) {
                                       return null;
                                     } else {
-                                      return 'Enter Vaild name';
+                                      return 'Enter a valid name';
                                     }
                                   },
                                   onSaved: (val) {
-                                    name = val;
+                                    name = val ?? ''; // Handling null value
                                   },
                                   keyboardType: TextInputType.name,
                                   decoration: InputDecoration(
@@ -143,14 +149,13 @@ class _RequestLoginState extends State<RequestLogin>
                                 SizedBox(height: 20.0),
                                 TextFormField(
                                   onSaved: (val) {
-                                    rollno = val;
+                                    rollno = val ?? ''; // Handling null value
                                   },
                                   validator: (val) {
-                                    if (val.isEmpty) {
+                                    if (val == null || val.isEmpty) {
                                       return 'Enter your Roll Number';
-                                    } else {
-                                      return null;
                                     }
+                                    return null;
                                   },
                                   decoration: InputDecoration(
                                       labelText: 'Roll Number',
@@ -167,17 +172,17 @@ class _RequestLoginState extends State<RequestLogin>
                                 SizedBox(height: 20.0),
                                 TextFormField(
                                   onSaved: (val) {
-                                    _class = val;
+                                    _class = val ?? ''; // Handling null value
                                   },
                                   validator: (value) {
-                                    RegExp nameRegExp = RegExp('[0-9]');
-                                    RegExp numberRegExp = RegExp(r'\d');
-                                    if (value.isEmpty) {
-                                      return 'You Must enter your class!';
-                                    } else if (nameRegExp.hasMatch(value)) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'You must enter your class!';
+                                    }
+                                    RegExp classRegExp = RegExp(r'^[0-9]+$');
+                                    if (classRegExp.hasMatch(value)) {
                                       return null;
                                     } else {
-                                      return 'Enter Vaild class';
+                                      return 'Enter a valid class';
                                     }
                                   },
                                   decoration: InputDecoration(
@@ -195,16 +200,17 @@ class _RequestLoginState extends State<RequestLogin>
                                 SizedBox(height: 20.0),
                                 TextFormField(
                                   validator: (value) {
-                                    if ((Fzregex.hasMatch(
-                                            value, FzPattern.email) ==
-                                        false)) {
-                                      return "Enter Vaild Email address";
-                                    } else {
-                                      return null;
+                                    if (value == null || value.isEmpty) {
+                                      return 'Enter a valid Email address';
                                     }
+                                    if (!Fzregex.hasMatch(
+                                        value, FzPattern.email)) {
+                                      return 'Enter a valid Email address';
+                                    }
+                                    return null;
                                   },
                                   onSaved: (value) {
-                                    email = value;
+                                    email = value ?? ''; // Handling null value
                                   },
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
@@ -224,16 +230,16 @@ class _RequestLoginState extends State<RequestLogin>
                                   validator: (value) {
                                     String pattern =
                                         r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                                    RegExp regExp = new RegExp(pattern);
-                                    if (value.length == 0) {
+                                    RegExp regExp = RegExp(pattern);
+                                    if (value == null || value.isEmpty) {
                                       return 'Please enter mobile number';
                                     } else if (!regExp.hasMatch(value)) {
-                                      return 'Please enter valid mobile number';
+                                      return 'Please enter a valid mobile number';
                                     }
                                     return null;
                                   },
                                   onSaved: (val) {
-                                    phno = val;
+                                    phno = val ?? ''; // Handling null value
                                   },
                                   decoration: InputDecoration(
                                       labelText: 'Phone Number',
@@ -267,8 +273,8 @@ class _RequestLoginState extends State<RequestLogin>
                       children: <Widget>[
                         Bouncing(
                           onPress: () {
-                            if (_formkey.currentState.validate()) {
-                              _formkey.currentState.save();
+                            if (_formkey.currentState?.validate() ?? false) {
+                              _formkey.currentState?.save();
 
                               Navigator.push(
                                   context,
@@ -277,7 +283,6 @@ class _RequestLoginState extends State<RequestLogin>
                                         ProcessingRequest(),
                                   ));
                             }
-                            ;
                           },
                           child: MaterialButton(
                             onPressed: () {},

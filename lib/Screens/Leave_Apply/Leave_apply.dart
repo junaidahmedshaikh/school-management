@@ -16,21 +16,21 @@ class LeaveApply extends StatefulWidget {
 
 class _LeaveApplyState extends State<LeaveApply>
     with SingleTickerProviderStateMixin {
-  Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
-  AnimationController animationController;
+  late Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
+  late AnimationController animationController;
   final searchFieldController = TextEditingController();
 
-  TextEditingController _applyleavecontroller;
+  late TextEditingController _applyleavecontroller;
   String _applyleavevalueChanged = '';
   String _applyleavevalueToValidate = '';
   String _applyleavevalueSaved = '';
 
-  TextEditingController _fromcontroller;
+  late TextEditingController _fromcontroller;
   String _fromvalueChanged = '';
   String _fromvalueToValidate = '';
   String _fromvalueSaved = '';
 
-  TextEditingController _tocontroller;
+  late TextEditingController _tocontroller;
   String _tovalueChanged = '';
   String _tovalueToValidate = '';
   String _tovalueSaved = '';
@@ -77,9 +77,7 @@ class _LeaveApplyState extends State<LeaveApply>
 
     return AnimatedBuilder(
       animation: animationController,
-      builder: (BuildContext context, Widget child) {
-        final GlobalKey<ScaffoldState> _scaffoldKey =
-            new GlobalKey<ScaffoldState>();
+      builder: (BuildContext context, Widget? child) {
         return Scaffold(
           key: _scaffoldKey,
           appBar: CommonAppBar(
@@ -87,7 +85,7 @@ class _LeaveApplyState extends State<LeaveApply>
             notificationenabled: false,
             title: "Apply Leave",
             ontap: () {
-              _scaffoldKey.currentState.openDrawer();
+              _scaffoldKey.currentState?.openDrawer();
             },
           ),
           drawer: Drawer(
@@ -98,9 +96,7 @@ class _LeaveApplyState extends State<LeaveApply>
             key: _formkey,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -123,14 +119,9 @@ class _LeaveApplyState extends State<LeaveApply>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                        top: 13,
-                      ),
+                      padding: EdgeInsets.only(top: 13),
                       child: Container(
-                        // height: height * 0.06,
-                        padding: EdgeInsets.only(
-                          left: 10,
-                        ),
+                        padding: EdgeInsets.only(left: 10),
                         width: double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
@@ -147,22 +138,14 @@ class _LeaveApplyState extends State<LeaveApply>
                                   type: DateTimePickerType.date,
                                   dateMask: 'dd/MM/yyyy',
                                   controller: _applyleavecontroller,
-                                  //initialValue: _initialValue,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
                                   calendarTitle: "Leave Date",
                                   confirmText: "Confirm",
                                   enableSuggestions: true,
-                                  //locale: Locale('en', 'US'),
-                                  onChanged: (val) => setState(
-                                      () => _applyleavevalueChanged = val),
-                                  validator: (val) {
-                                    setState(
-                                        () => _applyleavevalueToValidate = val);
-                                    return null;
-                                  },
-                                  onSaved: (val) => setState(
-                                      () => _applyleavevalueSaved = val),
+                                  onChanged: (val) => setState(() {}),
+                                  validator: (val) => null,
+                                  onSaved: (val) {},
                                 ),
                               ),
                             ),
@@ -200,9 +183,8 @@ class _LeaveApplyState extends State<LeaveApply>
                           delayedAnimation.value * width, 0, 0),
                       child: DropdownSearch<String>(
                         validator: (v) => v == null ? "required field" : null,
-                        hint: "Please Select Leave type",
-                        mode: Mode.MENU,
-                        showSelectedItem: true,
+                        // hint: "Please Select Leave type",
+                        // mode: Mode.MENU,
                         items: [
                           "Medical",
                           "Family",
@@ -210,7 +192,7 @@ class _LeaveApplyState extends State<LeaveApply>
                           'Function',
                           'Others'
                         ],
-                        showClearButton: true,
+                        // showClearButton: true,
                         onChanged: print,
                       ),
                     ),
@@ -229,14 +211,9 @@ class _LeaveApplyState extends State<LeaveApply>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                        top: 13,
-                      ),
+                      padding: EdgeInsets.only(top: 13),
                       child: Container(
-                        // height: height * 0.06,
-                        padding: EdgeInsets.only(
-                          left: 10,
-                        ),
+                        padding: EdgeInsets.only(left: 10),
                         width: double.infinity,
                         decoration: BoxDecoration(
                             color: Colors.white38,
@@ -278,15 +255,9 @@ class _LeaveApplyState extends State<LeaveApply>
                                   child: CustomDatePicker(
                                     controller: _fromcontroller,
                                     title: "From",
-                                    onchanged: (val) =>
-                                        setState(() => _fromvalueChanged = val),
-                                    validator: (val) {
-                                      setState(
-                                          () => _fromvalueToValidate = val);
-                                      return null;
-                                    },
-                                    saved: (val) =>
-                                        setState(() => _fromvalueSaved = val),
+                                    onchanged: (val) => setState(() {}),
+                                    validator: (val) => null,
+                                    saved: (val) {},
                                   ),
                                 ),
                               ),
@@ -320,16 +291,9 @@ class _LeaveApplyState extends State<LeaveApply>
                                   child: CustomDatePicker(
                                     controller: _tocontroller,
                                     title: "To",
-                                    onchanged: (val) => setState(() {
-                                      _tovalueChanged = val;
-                                      print(val);
-                                    }),
-                                    validator: (val) {
-                                      setState(() => _tovalueToValidate = val);
-                                      return null;
-                                    },
-                                    saved: (val) =>
-                                        setState(() => _tovalueSaved = val),
+                                    onchanged: (val) => setState(() {}),
+                                    validator: (val) => null,
+                                    saved: (val) {},
                                   ),
                                 ),
                               ),
@@ -356,11 +320,8 @@ class _LeaveApplyState extends State<LeaveApply>
                       transform: Matrix4.translationValues(
                           delayedAnimation.value * width, 0, 0),
                       child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 13,
-                        ),
+                        padding: EdgeInsets.only(top: 13),
                         child: Container(
-                          // height: height * 0.06,
                           height: height * 0.25,
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -368,7 +329,6 @@ class _LeaveApplyState extends State<LeaveApply>
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: TextFormField(
-                            //autofocus: true,
                             minLines: 1,
                             maxLines: 10,
                             keyboardType: TextInputType.multiline,
@@ -377,7 +337,7 @@ class _LeaveApplyState extends State<LeaveApply>
                                   ? IconButton(
                                       icon: Icon(Icons.clear),
                                       onPressed: () => WidgetsBinding.instance
-                                          .addPostFrameCallback((_) =>
+                                          ?.addPostFrameCallback((_) =>
                                               searchFieldController.clear()))
                                   : null,
                               border: InputBorder.none,
@@ -423,7 +383,6 @@ class _LeaveApplyState extends State<LeaveApply>
                       child: Bouncing(
                         onPress: () {},
                         child: Container(
-                          //height: 20,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
@@ -457,10 +416,7 @@ class _LeaveApplyState extends State<LeaveApply>
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 8.0,
-                        bottom: 8.0,
-                      ),
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

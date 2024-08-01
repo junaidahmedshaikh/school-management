@@ -12,9 +12,9 @@ import 'ForgetPasseord.dart';
 import 'RequestLogin.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -22,8 +22,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
-  AnimationController animationController;
+  late Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
+  late AnimationController animationController;
 
   @override
   void initState() {
@@ -56,17 +56,23 @@ class _MyHomePageState extends State<MyHomePage>
     super.dispose();
   }
 
-  UserModel _userfromfirebase(FirebaseUser user) {
-    return user != null ? UserModel(uid: user.uid) : null;
-    print(user);
-  }
+  // UserModel _userfromfirebase(FirebaseUser? user) {
+  //   return user != null ? UserModel(uid: user.uid) : null;
+  //   print(user);
+  // }
+
+//  ChatGpt Code
+  // UserModel? _userfromfirebase(User? user) {
+  //   print(user); // Make sure to print before the return statement
+  //   return user != null ? UserModel(uid: user.uid) : null;
+  // }
 
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   bool _autoValidate = false;
   bool passshow = false;
-  String _pass;
-  String _email;
-  String user1;
+  String _pass = '';
+  String _email = '';
+  String user1 = '';
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -75,7 +81,10 @@ class _MyHomePageState extends State<MyHomePage>
     animationController.forward();
     return AnimatedBuilder(
       animation: animationController,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
+        // Updated to accept nullable `Widget?` for child
+        final double width = MediaQuery.of(context).size.width;
+
         return Scaffold(
           body: ListView(
             children: <Widget>[
@@ -137,21 +146,22 @@ class _MyHomePageState extends State<MyHomePage>
                       children: <Widget>[
                         Form(
                             key: _formkey,
-                            autovalidate: _autoValidate,
+                            autovalidateMode: _autoValidate
+                                ? AutovalidateMode.always
+                                : AutovalidateMode.disabled,
                             child: Column(
                               children: [
                                 TextFormField(
                                   validator: (value) {
-                                    if ((Fzregex.hasMatch(
-                                            value, FzPattern.email) ==
-                                        false)) {
-                                      return "Enter Vaild Email address";
-                                    } else {
-                                      return null;
+                                    if (value != null &&
+                                        !Fzregex.hasMatch(
+                                            value, FzPattern.email)) {
+                                      return "Enter Valid Email address";
                                     }
+                                    return null;
                                   },
                                   onSaved: (value) {
-                                    _email = value;
+                                    _email = value ?? '';
                                   },
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
@@ -173,14 +183,13 @@ class _MyHomePageState extends State<MyHomePage>
                                 TextFormField(
                                   obscuringCharacter: '*',
                                   validator: (val) {
-                                    if (val.isEmpty) {
-                                      return "Enter Vaild password";
-                                    } else {
-                                      return null;
+                                    if (val == null || val.isEmpty) {
+                                      return "Enter Valid password";
                                     }
+                                    return null;
                                   },
                                   onSaved: (val) {
-                                    _pass = val;
+                                    _pass = val ?? '';
                                   },
                                   decoration: InputDecoration(
                                       suffix: passshow == false
@@ -210,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage>
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.green))),
-                                  obscureText: passshow == false ? true : false,
+                                  obscureText: !passshow,
                                 ),
                               ],
                             )),
@@ -265,39 +274,18 @@ class _MyHomePageState extends State<MyHomePage>
                       children: <Widget>[
                         Bouncing(
                           onPress: () {
-                            if (_formkey.currentState.validate()) {
-                              _formkey.currentState.save();
-                              /*try {
-                                final FirebaseUser user =
-                                    (await _auth.signInWithEmailAndPassword(
-                                  email: _email,
-                                  password: _pass,
-                                ))
-                                        .user;
-                                dynamic userinfo = _auth.currentUser;
-                                return _userfromfirebase(userinfo);
-                              } catch (e) {
-                                if (e.code == 'user-not-found') {
-                                  print("user not found");
-                                } else if (e.code == 'wrong-password') {
-                                  print("wrong password");
-                                } else {
-                                  print("check internet connection!");
-                                }
-                              }
-                            } else {
-                              setState(() {
-                                _autoValidate = true;
-                              });
-                            }*/
-
+                            if (_formkey.currentState?.validate() ?? false) {
+                              _formkey.currentState?.save();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (BuildContext context) => Home(),
                                   ));
+                            } else {
+                              setState(() {
+                                _autoValidate = true;
+                              });
                             }
-                            ;
                           },
                           child: MaterialButton(
                             onPressed: () {},

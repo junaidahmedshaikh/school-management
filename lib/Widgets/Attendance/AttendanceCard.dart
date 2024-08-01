@@ -9,12 +9,12 @@ class AttendanceCard extends StatefulWidget {
   final bool attendance;
 
   const AttendanceCard(
-      {Key key,
-      this.starttime,
-      this.endtime,
-      this.subject,
-      this.staff,
-      this.attendance})
+      {Key? key,
+      this.starttime = '',
+      this.endtime = '',
+      this.subject = '',
+      this.staff = '',
+      this.attendance = false})
       : super(key: key);
 
   @override
@@ -23,8 +23,8 @@ class AttendanceCard extends StatefulWidget {
 
 class _AttendanceCardState extends State<AttendanceCard>
     with SingleTickerProviderStateMixin {
-  Animation animation, delayedAnimation;
-  AnimationController animationController;
+  late Animation animation, delayedAnimation;
+  late AnimationController animationController;
 
   @override
   void initState() {

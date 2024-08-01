@@ -1,7 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:randomizer/randomizer.dart';
-
+// import 'package:randomizer/randomizer.dart';
 import 'package:school_management/Widgets/AppBar.dart';
 import 'package:school_management/Widgets/BouncingButton.dart';
 import 'package:school_management/Widgets/Exams/SubjectCard.dart';
@@ -14,14 +13,13 @@ class ExamResult extends StatefulWidget {
 
 class _ExamResultState extends State<ExamResult>
     with SingleTickerProviderStateMixin {
-  Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
-  AnimationController animationController;
-  Randomizer randomcolor = Randomizer();
+  late Animation animation, delayedAnimation, muchDelayedAnimation;
+  late AnimationController animationController;
+  // Randomizer randomcolor = Randomizer(); // This line will throw an error if 'randomizer' package is not available
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //SystemChrome.setEnabledSystemUIOverlays([]);
 
     animationController =
         AnimationController(duration: Duration(seconds: 3), vsync: this);
@@ -39,7 +37,6 @@ class _ExamResultState extends State<ExamResult>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     animationController.dispose();
     super.dispose();
   }
@@ -51,9 +48,10 @@ class _ExamResultState extends State<ExamResult>
     final double height = MediaQuery.of(context).size.height;
     return AnimatedBuilder(
         animation: animationController,
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
+          // Changed Widget to Widget?
           final GlobalKey<ScaffoldState> _scaffoldKey =
-              new GlobalKey<ScaffoldState>();
+              GlobalKey<ScaffoldState>();
           return Scaffold(
               key: _scaffoldKey,
               appBar: CommonAppBar(
@@ -61,7 +59,7 @@ class _ExamResultState extends State<ExamResult>
                 notificationenabled: false,
                 title: "Exams",
                 ontap: () {
-                  _scaffoldKey.currentState.openDrawer();
+                  _scaffoldKey.currentState?.openDrawer(); // Added null check
                 },
               ),
               drawer: Drawer(
@@ -122,7 +120,6 @@ class _ExamResultState extends State<ExamResult>
                           hint: "Please Select",
                           mode: Mode.MENU,
                           showSelectedItem: true,
-                          
                           items: [
                             "Quarterly",
                             "half yearly",
@@ -154,7 +151,7 @@ class _ExamResultState extends State<ExamResult>
                         transform: Matrix4.translationValues(
                             muchDelayedAnimation.value * width, 0, 0),
                         child: Padding(
-                          padding: const EdgeInsets.only(top:8.0),
+                          padding: const EdgeInsets.only(top: 8.0),
                           child: SubjectCard(
                             subjectname: "English",
                             chapter: "1-5",
@@ -165,11 +162,11 @@ class _ExamResultState extends State<ExamResult>
                           ),
                         ),
                       ),
-                       Transform(
+                      Transform(
                         transform: Matrix4.translationValues(
                             muchDelayedAnimation.value * width, 0, 0),
                         child: Padding(
-                          padding: const EdgeInsets.only(top:8.0),
+                          padding: const EdgeInsets.only(top: 8.0),
                           child: SubjectCard(
                             subjectname: "Maths",
                             chapter: "1-5",
@@ -180,11 +177,11 @@ class _ExamResultState extends State<ExamResult>
                           ),
                         ),
                       ),
-                       Transform(
+                      Transform(
                         transform: Matrix4.translationValues(
                             muchDelayedAnimation.value * width, 0, 0),
                         child: Padding(
-                          padding: const EdgeInsets.only(top:8.0),
+                          padding: const EdgeInsets.only(top: 8.0),
                           child: SubjectCard(
                             subjectname: "science",
                             chapter: "1-5",
@@ -195,11 +192,11 @@ class _ExamResultState extends State<ExamResult>
                           ),
                         ),
                       ),
-                       Transform(
+                      Transform(
                         transform: Matrix4.translationValues(
                             muchDelayedAnimation.value * width, 0, 0),
                         child: Padding(
-                          padding: const EdgeInsets.only(top:8.0),
+                          padding: const EdgeInsets.only(top: 8.0),
                           child: SubjectCard(
                             subjectname: "Social Science",
                             chapter: "1-5",
@@ -372,11 +369,10 @@ class _ExamResultState extends State<ExamResult>
                                 ),
                               ),
                             ),
-                         
                           ],
                         ),
                       ),
-                         SizedBox(
+                      SizedBox(
                         height: height * 0.20,
                       ),
                     ],

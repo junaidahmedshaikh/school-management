@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
   @override

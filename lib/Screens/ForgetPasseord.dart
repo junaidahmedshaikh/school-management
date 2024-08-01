@@ -10,42 +10,67 @@ class ForgetPassword extends StatefulWidget {
 
 class _ForgetPasswordState extends State<ForgetPassword>
     with SingleTickerProviderStateMixin {
-  Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
-  AnimationController animationController;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    animationController =
-        AnimationController(duration: Duration(seconds: 3), vsync: this);
-    animation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
-        parent: animationController, curve: Curves.fastOutSlowIn));
-
-    delayedAnimation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
-        parent: animationController,
-        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
-
-    muchDelayedAnimation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
-        parent: animationController,
-        curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn)));
-
-    LeftCurve = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
-        parent: animationController,
-        curve: Interval(0.5, 1.0, curve: Curves.easeInOut)));
-  }
+  late Animation<double> animation;
+  late Animation<double> delayedAnimation;
+  late Animation<double> muchDelayedAnimation;
+  late Animation<double> LeftCurve;
+  late AnimationController animationController;
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   bool _autovalidate = false;
-  String _email;
-  String _rollno;
+  late String _email;
+  late String _rollno;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(duration: Duration(seconds: 3), vsync: this);
+
+    animation = Tween<double>(begin: -1.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
+
+    delayedAnimation = Tween<double>(begin: -1.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
+      ),
+    );
+
+    muchDelayedAnimation = Tween<double>(begin: -1.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn),
+      ),
+    );
+
+    LeftCurve = Tween<double>(begin: -1.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Interval(0.5, 1.0, curve: Curves.easeInOut),
+      ),
+    );
+
+    animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    animationController.forward();
+
     return AnimatedBuilder(
       animation: animationController,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return Scaffold(
           body: ListView(
             children: <Widget>[
@@ -61,9 +86,10 @@ class _ForgetPasswordState extends State<ForgetPassword>
                           child: Text(
                             'Forget',
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 40.0,
-                                fontWeight: FontWeight.bold),
+                              color: Colors.black,
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         Container(
@@ -73,9 +99,10 @@ class _ForgetPasswordState extends State<ForgetPassword>
                             child: Text(
                               'Password',
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 40.0,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.black,
+                                fontSize: 40.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -85,9 +112,10 @@ class _ForgetPasswordState extends State<ForgetPassword>
                             child: Text(
                               '.',
                               style: TextStyle(
-                                  color: Colors.green[400],
-                                  fontSize: 80.0,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.green[400],
+                                fontSize: 80.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -106,74 +134,76 @@ class _ForgetPasswordState extends State<ForgetPassword>
                     child: Column(
                       children: <Widget>[
                         Form(
-                            key: _formkey,
-                            autovalidate: _autovalidate,
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  validator: (val) {
-                                    if (val.isEmpty) {
-                                      return "You Must Enter Roll Number";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  onSaved: (val) {
-                                    _rollno = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      labelText: 'Roll Number',
-                                      contentPadding: EdgeInsets.all(5),
-                                      labelStyle: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: Colors.grey),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.green))),
+                          key: _formkey,
+                          autovalidateMode: _autovalidate
+                              ? AutovalidateMode.always
+                              : AutovalidateMode.disabled,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                validator: (val) {
+                                  if (val == null || val.isEmpty) {
+                                    return "You must enter Roll Number";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (val) {
+                                  _rollno = val!;
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Roll Number',
+                                  contentPadding: EdgeInsets.all(5),
+                                  labelStyle: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.green),
+                                  ),
                                 ),
-                                SizedBox(height: 20.0),
-                                TextFormField(
-                                  validator: (value) {
-                                    if ((Fzregex.hasMatch(
-                                            value, FzPattern.email) ==
-                                        false)) {
-                                      return "Enter Vaild Email address";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  onSaved: (value) {
-                                    _email = value;
-                                  },
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: InputDecoration(
-                                    labelText: 'EMAIL',
-                                    contentPadding: EdgeInsets.all(5),
-                                    labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: Colors.grey),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.green,
-                                      ),
+                              ),
+                              SizedBox(height: 20.0),
+                              TextFormField(
+                                validator: (value) {
+                                  if (value == null ||
+                                      !RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                          .hasMatch(value)) {
+                                    return "Enter valid email address";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _email = value!;
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  labelText: 'EMAIL',
+                                  contentPadding: EdgeInsets.all(5),
+                                  labelStyle: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.green,
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20.0),
-                              ],
-                            )),
+                              ),
+                              SizedBox(height: 20.0),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10.0,
-              ),
+              SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 5, 20.0, 5),
                 child: Transform(
@@ -182,24 +212,23 @@ class _ForgetPasswordState extends State<ForgetPassword>
                   child: Container(
                     child: Column(
                       children: <Widget>[
-                        Bouncing(
-                          onPress: () {
-                            if (_formkey.currentState.validate()) {
-                              _formkey.currentState.save();
-                              try {} catch (e) {}
+                        MaterialButton(
+                          onPressed: () {
+                            if (_formkey.currentState!.validate()) {
+                              _formkey.currentState!.save();
+                              // Perform your action
                             } else {
-                              _autovalidate = true;
+                              setState(() {
+                                _autovalidate = true;
+                              });
                             }
                           },
-                          child: MaterialButton(
-                            onPressed: () {},
-                            elevation: 0.0,
-                            minWidth: MediaQuery.of(context).size.width,
-                            color: Colors.green,
-                            child: Text(
-                              "Request",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                          elevation: 0.0,
+                          minWidth: MediaQuery.of(context).size.width,
+                          color: Colors.green,
+                          child: Text(
+                            "Request",
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ],
@@ -207,9 +236,7 @@ class _ForgetPasswordState extends State<ForgetPassword>
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10.0,
-              ),
+              SizedBox(height: 10.0),
             ],
           ),
         );

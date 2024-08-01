@@ -17,15 +17,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
-  AnimationController animationController;
+  late Animation animation, delayedAnimation, muchDelayedAnimation, LeftCurve;
+  late AnimationController animationController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Firebase.initializeApp();
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
     animationController =
         AnimationController(duration: Duration(seconds: 3), vsync: this);
     animation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
