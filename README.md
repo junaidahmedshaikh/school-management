@@ -74,9 +74,4 @@ For any inquiries or questions, please contact:
 - Junaid Ahmed Shaikh
 - [GitHub Profile](https://github.com/junaidahmedshaikh)
 
----
 
-Thank you for using the School Management System!
-```
-
-You can customize the README file further based on your project's specifics.
